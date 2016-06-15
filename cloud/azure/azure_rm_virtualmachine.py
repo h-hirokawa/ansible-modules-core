@@ -504,7 +504,7 @@ class AzureRMVirtualMachine(AzureRMModuleBase):
         self.os_type = None
         self.os_disk_caching = None
         self.network_interface_names = None
-        self.remove_on_absent = set()
+        self.remove_on_absent = None
         self.tags = None
         self.force = None
         self.public_ip_allocation_method = None
@@ -526,13 +526,13 @@ class AzureRMVirtualMachine(AzureRMModuleBase):
         super(AzureRMVirtualMachine, self).__init__(derived_arg_spec=self.module_arg_spec,
                                                     supports_check_mode=True)
 
-        # make sure options are lower case
-        self.remove_on_absent = set([resource.lower() for resource in  self.remove_on_absent])
-
     def exec_module(self, **kwargs):
 
         for key in self.module_arg_spec.keys() + ['tags']:
             setattr(self, key, kwargs[key])
+
+        # make sure options of remove_on_absent are lower case
+        self.remove_on_absent = set([resource.lower() for resource in  self.remove_on_absent])
 
         changed = False
         powerstate_change = None
